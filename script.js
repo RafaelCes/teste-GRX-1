@@ -1,11 +1,33 @@
 const personTable = document.getElementById('person-table');
 
 
-const personArray = [];
+let personArray = [];
 
 function clearInputs() {
   document.getElementById('name').value = '';
   document.getElementById('age').value = '';
+}
+
+function deletePerson(e) {
+  const name = e.target.parentElement.firstChild.innerText;
+  personArray = personArray.filter((person) => person.name !== name);
+  
+  const table = e.target.parentElement.parentElement
+  const row = e.target.parentElement;
+  table.removeChild(row);
+}
+
+function orderTable() {
+  personArray.sort((a , b) => {
+    return (a.age > b.age) ? -1 : ((b.age > a.age) ? 1 : 0);
+  });
+  Array.from(personTable.children).forEach((child, index) => {
+    if(index != 0) {
+    child.firstChild.innerText = personArray[index - 1].name;
+    child.firstChild.nextSibling.innerText = personArray[index - 1].age;
+    }
+  });
+ 
 }
 
 function checkIfExists (person) {
@@ -22,6 +44,11 @@ function createRow(name, age) {
   const ageColumn = document.createElement('td');
   ageColumn.innerText = age;
   row.appendChild(ageColumn);
+
+  const deleteButton = document.createElement('button');
+  deleteButton.innerHTML = 'X';
+  deleteButton.addEventListener('click', deletePerson);
+  row.appendChild(deleteButton);
 
 
   return row;
@@ -45,7 +72,7 @@ function SavePerson(e) {
   addToTable(name, age);
   clearInputs();
   
-  document.getElementById('texto-tarefa').value = '';
+  orderTable();
 }
 
 function addEventSavePerson() {
