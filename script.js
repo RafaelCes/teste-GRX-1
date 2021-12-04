@@ -8,6 +8,10 @@ function clearInputs() {
   document.getElementById('age').value = '';
 }
 
+function checkIfExists (person) {
+  return personArray.find(({ name }) => name === person);
+}
+
 function createRow(name, age) {
   const row = document.createElement('tr');
 
@@ -31,8 +35,12 @@ function addToTable(name, age) {
 
 function SavePerson(e) {
   e.preventDefault();
+
   const name = document.getElementById('name').value;
   const age = document.getElementById('age').value;
+
+  if(checkIfExists(name)) return alert('nome ja cadastrado');
+  
   personArray.push({name, age});
   addToTable(name, age);
   clearInputs();
