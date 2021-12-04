@@ -11,22 +11,22 @@
   <header>
     <h1>Lista de pessoas</h1>
   </header>
-  <label> 
-    Nome:
-    <input type="text" id="name" placeholder="nome" >
-  </label>
-  <label>
-    Idade:
-    <input type="number" id="age" placeholder="idade" >
-  </label>
-  <button id="save-person">Salvar</button>
-  <table>
+  <form id="person-form" onsubmit="return false">
+    <label> 
+      Nome:
+      <input type="text" id="name" placeholder="nome" >
+    </label>
+    <label>
+      Idade:
+      <input type="number" id="age" placeholder="idade" >
+    </label>
+    <button type="submit"  id="save-person">Salvar</button>
+  </form>
+  <table id="person-table">
     <tr>
       <th>Nome</th>
       <th>Idade</th>
     </tr>
-    <tr></tr>
-    <tr></tr>
   </table>
   <script src="script.js"></script>
 </body>
