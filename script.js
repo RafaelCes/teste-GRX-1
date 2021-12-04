@@ -9,9 +9,11 @@ function clearInputs() {
 }
 
 function deletePerson(e) {
+  if(!window.confirm('Deseja apagar esta linha?')) return;
+
   const name = e.target.parentElement.firstChild.innerText;
   personArray = personArray.filter((person) => person.name !== name);
-  
+
   const table = e.target.parentElement.parentElement
   const row = e.target.parentElement;
   table.removeChild(row);
