@@ -2,7 +2,7 @@
 
 este repositorio contem um desafio tecnico para o processo de seleção da empresa GRX soluções, desenvolvido com  HTML CSS Javascrypt e bootstrap
 
-para rodar essa aplição basta executar o arquivo index.html no browser de sua preferencia.
+
 
 os requisitos doprojeto seguem abaixo
 
