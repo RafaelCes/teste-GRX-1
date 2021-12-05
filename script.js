@@ -2,6 +2,7 @@ const personTable = document.getElementById('person-table');
 
 
 let personArray = [];
+let  decreasing = true
 
 function clearInputs() {
   document.getElementById('name').value = '';
@@ -44,8 +45,6 @@ function saveEdit(e) {
   name.innerText = nameInput.value;
   age.innerText = ageInput.value;
 
-  // name.removeChild(nameInput);
-  // age.removeChild(ageInput);
 
   const editButton = document.createElement('button');
   editButton.innerHTML = 'editar';
@@ -103,9 +102,15 @@ function deletePerson(e) {
 }
 
 function orderTable() {
-  personArray.sort((a , b) => {
-    return (a.age > b.age) ? -1 : ((b.age > a.age) ? 1 : 0);
-  });
+  if(decreasing){
+    personArray.sort((a , b) => {
+      return (a.age > b.age) ? -1 : ((b.age > a.age) ? 1 : 0);
+    });
+  } else {
+    personArray.sort((a , b) => {
+      return (a.age > b.age) ? 1 : ((b.age > a.age) ? -1 : 0);
+    });
+  }
   Array.from(personTable.children).forEach((child, index) => {
     child.firstChild.innerText = personArray[index].name;
     child.firstChild.nextSibling.innerText = personArray[index].age;
@@ -148,7 +153,7 @@ function addToTable(name, age) {
   personTable.appendChild(newRow);
 }
 
-function SavePerson(e) {
+function savePerson(e) {
   e.preventDefault();
 
   const name = document.getElementById('name').value;
@@ -163,13 +168,30 @@ function SavePerson(e) {
   orderTable();
 }
 
-function addEventSavePerson() {
-  const form = document.getElementById('person-form');
-  form.addEventListener('submit', SavePerson);
+function changeOrder() {
+  const ageHeader = document.getElementById('age-header');
+  if(decreasing) {
+    decreasing = false
+    ageHeader.innerText = 'Idade ˄'
+  }
+  else {
+    decreasing = true
+    ageHeader.innerText = 'Idade ˅'
+  }
+  orderTable();
 }
 
+function addEventSavePerson() {
+  const form = document.getElementById('person-form');
+  form.addEventListener('submit', savePerson);
+}
+
+function addEventChangeOrder() {
+  const form = document.getElementById('age-header');
+  form.addEventListener('click', changeOrder);
+}
 
 window.onload = function load() {
   addEventSavePerson();
- 
+  addEventChangeOrder();
 };
