@@ -1,15 +1,16 @@
+// const bootstrap = require('bootstrap');
+
 const personTable = document.getElementById('person-table');
 
-
 let personArray = [];
-let  decreasing = true
+let decreasing = true;
 
 function clearInputs() {
   document.getElementById('name').value = '';
   document.getElementById('age').value = '';
 }
 
-function createEditInputs (e) {
+function createEditInputs(e) {
   const row = e.target.parentElement;
   const name = row.firstChild;
   const age = name.nextSibling;
@@ -17,10 +18,8 @@ function createEditInputs (e) {
   const nameInput = document.createElement('input');
   nameInput.value = name.innerText;
 
-  const ageInput = document.createElement('input')
+  const ageInput = document.createElement('input');
   ageInput.value = age.innerText;
-
-
   
   name.appendChild(nameInput);
   age.appendChild(ageInput);
@@ -36,15 +35,14 @@ function saveEdit(e) {
   const ageInput = age.firstElementChild;
 
   personArray.forEach((person) => {
-    if(person.name === name.innerText){
+    if (person.name === name.innerText) {
       person.name = nameInput.value;
       person.age = ageInput.value;
     }
-  })
+  });
 
   name.innerText = nameInput.value;
   age.innerText = ageInput.value;
-
 
   const editButton = document.createElement('button');
   editButton.innerHTML = 'editar';
@@ -70,12 +68,13 @@ function createEditButtons(e) {
 
   const saveButton = document.createElement('button');
   saveButton.innerHTML = 'salvar';
+  saveButton.classList.add('btn', 'btn-outline-primary', 'btn-sm');
   saveButton.addEventListener('click', saveEdit);
 
   const cancelButton = document.createElement('button');
   cancelButton.innerHTML = 'cancelar';
+  cancelButton.classList.add('btn', 'btn-outline-danger', 'btn-sm');
   cancelButton.addEventListener('click', cancelEdit);
-
 
   editButton.parentElement.insertBefore(saveButton, editButton);
   editButton.parentElement.insertBefore(cancelButton, editButton);
@@ -85,40 +84,33 @@ function createEditButtons(e) {
 function editPerson(e) {
   createEditInputs(e);
   createEditButtons(e);
-
 }
 
 function deletePerson(e) {
-  if(!window.confirm('Deseja apagar esta linha?')) return;
+  if (!window.confirm('Deseja apagar esta linha?')) return;
 
   const row = e.target.parentElement;
-  const table = row.parentElement
+  const table = row.parentElement;
 
   const name = row.firstChild.innerText;
   personArray = personArray.filter((person) => person.name !== name);
-
   
   table.removeChild(row);
 }
 
 function orderTable() {
-  if(decreasing){
-    personArray.sort((a , b) => {
-      return (a.age > b.age) ? -1 : ((b.age > a.age) ? 1 : 0);
-    });
+  if (decreasing) {
+    personArray.sort((a, b) => ((a.age > b.age) ? -1 : ((b.age > a.age) ? 1 : 0)));
   } else {
-    personArray.sort((a , b) => {
-      return (a.age > b.age) ? 1 : ((b.age > a.age) ? -1 : 0);
-    });
+    personArray.sort((a, b) => ((a.age > b.age) ? 1 : ((b.age > a.age) ? -1 : 0)));
   }
   Array.from(personTable.children).forEach((child, index) => {
     child.firstChild.innerText = personArray[index].name;
     child.firstChild.nextSibling.innerText = personArray[index].age;
   });
- 
 }
 
-function checkIfExists (person) {
+function checkIfExists(person) {
   return personArray.find(({ name }) => name === person);
 }
 
@@ -135,14 +127,15 @@ function createRow(name, age) {
 
   const editButton = document.createElement('button');
   editButton.innerHTML = 'editar';
+  editButton.classList.add('btn', 'btn-outline-primary', 'btn-sm');
   editButton.addEventListener('click', editPerson);
   row.appendChild(editButton);
 
   const deleteButton = document.createElement('button');
   deleteButton.innerHTML = 'X';
+  deleteButton.classList.add('btn', 'btn-outline-danger', 'btn-sm');
   deleteButton.addEventListener('click', deletePerson);
   row.appendChild(deleteButton);
-
 
   return row;
 }
@@ -159,9 +152,9 @@ function savePerson(e) {
   const name = document.getElementById('name').value;
   const age = document.getElementById('age').value;
 
-  if(checkIfExists(name)) return alert('nome ja cadastrado');
+  if (checkIfExists(name)) return alert('nome ja cadastrado');
   
-  personArray.push({name, age});
+  personArray.push({ name, age });
   addToTable(name, age);
   clearInputs();
   
@@ -170,13 +163,12 @@ function savePerson(e) {
 
 function changeOrder() {
   const ageHeader = document.getElementById('age-header');
-  if(decreasing) {
-    decreasing = false
-    ageHeader.innerText = 'Idade ˄'
-  }
-  else {
-    decreasing = true
-    ageHeader.innerText = 'Idade ˅'
+  if (decreasing) {
+    decreasing = false;
+    ageHeader.innerText = 'Idade ˄';
+  } else {
+    decreasing = true;
+    ageHeader.innerText = 'Idade ˅';
   }
   orderTable();
 }
