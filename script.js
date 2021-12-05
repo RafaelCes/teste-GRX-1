@@ -1,13 +1,35 @@
-// const bootstrap = require('bootstrap');
-
 const personTable = document.getElementById('person-table');
 
 let personArray = [];
 let decreasing = true;
 
-function clearInputs() {
-  document.getElementById('name').value = '';
-  document.getElementById('age').value = '';
+function decreasingSort(a, b) {
+  if (a.age > b.age) return -1; 
+  if (b.age > a.age) return 1;
+  return 0;
+}
+
+function increasingSort(a, b) {
+  if (a.age > b.age) return 1; 
+  if (b.age > a.age) return -1;
+  return 0;
+}
+
+function sortPersonArray() {
+  if (decreasing) {
+    personArray.sort((a, b) => decreasingSort(a, b));
+  } else {
+    personArray.sort((a, b) => increasingSort(a, b));
+  }
+}
+
+function orderTable() {
+  sortPersonArray();
+
+  Array.from(personTable.children).forEach((child, index) => {
+    child.firstChild.innerText = personArray[index].name;
+    child.firstChild.nextSibling.innerText = personArray[index].age;
+  });
 }
 
 function createEditInputs(e) {
@@ -25,6 +47,24 @@ function createEditInputs(e) {
   age.appendChild(ageInput);
 }
 
+function createEditButton() {
+  const editButton = document.createElement('button');
+  editButton.innerHTML = 'editar';
+  editButton.classList.add('btn', 'btn-outline-primary', 'btn-sm');
+  editButton.addEventListener('click', editPerson);
+
+  return editButton;
+}
+
+function updateArray(name, nameInput, ageInput) {
+  personArray.forEach((person) => {
+    if (person.name === name.innerText) {
+      person.name = nameInput.value;
+      person.age = ageInput.value;
+    }
+  });
+}
+
 function saveEdit(e) {
   const row = e.target.parentElement;
   const name = row.firstChild;
@@ -34,19 +74,12 @@ function saveEdit(e) {
   const nameInput = name.firstElementChild;
   const ageInput = age.firstElementChild;
 
-  personArray.forEach((person) => {
-    if (person.name === name.innerText) {
-      person.name = nameInput.value;
-      person.age = ageInput.value;
-    }
-  });
+  updateArray(name, nameInput, ageInput);
 
   name.innerText = nameInput.value;
   age.innerText = ageInput.value;
 
-  const editButton = document.createElement('button');
-  editButton.innerHTML = 'editar';
-  editButton.addEventListener('click', editPerson);
+  const editButton = createEditButton();
   row.insertBefore(editButton, saveButton);
 
   row.removeChild(saveButton);
@@ -63,7 +96,7 @@ function cancelEdit(e) {
   row.parentElement.replaceChild(newRow, row);
 }
 
-function createEditButtons(e) {
+function createEditControllers(e) {
   const editButton = e.target;
 
   const saveButton = document.createElement('button');
@@ -83,7 +116,7 @@ function createEditButtons(e) {
 
 function editPerson(e) {
   createEditInputs(e);
-  createEditButtons(e);
+  createEditControllers(e);
 }
 
 function deletePerson(e) {
@@ -91,27 +124,11 @@ function deletePerson(e) {
 
   const row = e.target.parentElement;
   const table = row.parentElement;
-
   const name = row.firstChild.innerText;
+
   personArray = personArray.filter((person) => person.name !== name);
   
   table.removeChild(row);
-}
-
-function orderTable() {
-  if (decreasing) {
-    personArray.sort((a, b) => ((a.age > b.age) ? -1 : ((b.age > a.age) ? 1 : 0)));
-  } else {
-    personArray.sort((a, b) => ((a.age > b.age) ? 1 : ((b.age > a.age) ? -1 : 0)));
-  }
-  Array.from(personTable.children).forEach((child, index) => {
-    child.firstChild.innerText = personArray[index].name;
-    child.firstChild.nextSibling.innerText = personArray[index].age;
-  });
-}
-
-function checkIfExists(person) {
-  return personArray.find(({ name }) => name === person);
 }
 
 function createRow(name, age) {
@@ -125,10 +142,7 @@ function createRow(name, age) {
   ageColumn.innerText = age;
   row.appendChild(ageColumn);
 
-  const editButton = document.createElement('button');
-  editButton.innerHTML = 'editar';
-  editButton.classList.add('btn', 'btn-outline-primary', 'btn-sm');
-  editButton.addEventListener('click', editPerson);
+  const editButton = createEditButton();
   row.appendChild(editButton);
 
   const deleteButton = document.createElement('button');
@@ -138,6 +152,15 @@ function createRow(name, age) {
   row.appendChild(deleteButton);
 
   return row;
+}
+
+function clearInputs() {
+  document.getElementById('name').value = '';
+  document.getElementById('age').value = '';
+}
+
+function checkIfExists(person) {
+  return personArray.find(({ name }) => name === person);
 }
 
 function addToTable(name, age) {
